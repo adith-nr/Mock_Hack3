@@ -22,8 +22,8 @@ export const Activity =  async (req , res) => {
 
 
 export const Flight = async (req , res) => {
-    console.log(req.body)
-   const {numberOfDays, budgetClass, destination, origin, layovers, arrivalDate, departureDate} = req.body
+    console.log("Hahah", req.body)
+    const {numberOfDays, budgetClass, destination, origin, layovers, arrivalDate, departureDate} = req.body
     const data = {numberOfDays, budgetClass, destination, origin, layovers, arrivalDate, departureDate}
 
     try{
