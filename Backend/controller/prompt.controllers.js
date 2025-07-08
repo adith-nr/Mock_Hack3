@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const Activity =  async (req , res) => {
+export const Activity =  async (req , res) => {
     //data = req.body
     data = new FormData()
     //data.append("age" : age)
@@ -20,11 +20,12 @@ const Activity =  async (req , res) => {
   }
 }
 
-export default Activity
+
 
 export const Flight = async (req , res) => {
-    const {from_city, to_city, departure_date,budget} = req.body
-    const data = {from_city, to_city, departure_date,budget}
+    console.log(req.body)
+   const {numberOfDays, budgetClass, destination, origin, layovers, arrivalDate, departureDate} = req.body
+    const data = {numberOfDays, budgetClass, destination, origin, layovers, arrivalDate, departureDate}
 
     try{
         const resp = await fetch("http://localhost:8000/flight_details", {
@@ -35,8 +36,8 @@ export const Flight = async (req , res) => {
             body: JSON.stringify(data)
         })
 
-        const data = await resp.json()
-        res.status(200).json({flight_details: data})
+        const Fdata = await resp.json()
+        res.status(200).json({flight_details: Fdata})
 
     } catch (err) {
         console.error('Forwarding error:', err.message);

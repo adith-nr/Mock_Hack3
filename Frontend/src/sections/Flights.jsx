@@ -236,7 +236,7 @@ const Flights = () => {
         </button>
       </form>
 
-      <FlightToBackend localStorageKey="flightForm" endpoint="http://localhost:5000/api/flight-data" />
+      <FlightToBackend localStorageKey="flightForm" endpoint="http://localhost:3000/api/prompt/Flight" />
     
     </section>
   );

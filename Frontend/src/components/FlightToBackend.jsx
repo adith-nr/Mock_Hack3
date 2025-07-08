@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const FlightToBackend = ({ localStorageKey = 'flightForm', endpoint = 'http://localhost:5000/api/flight-data' }) => {
+const FlightToBackend = ({ localStorageKey = 'flightForm', endpoint = 'http://localhost:5000/api/prompt/Flight' }) => {
   const [status, setStatus] = useState('');
 
   const handleSend = async () => {
