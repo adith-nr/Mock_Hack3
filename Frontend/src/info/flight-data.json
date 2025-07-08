@@ -1,0 +1,9 @@
+{
+  "numberOfDays": 7,
+  "budgetClass": "economy",
+  "destination": "Paris",
+  "origin": "New York",
+  "layovers": ["London", "Frankfurt"],
+  "arrivalDate": "2025-07-15",
+  "departureDate": "2025-07-08"
+}
