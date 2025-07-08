@@ -1,33 +1,12 @@
-import requests
+from user import *
+import google.generativeai as genai
+from dotenv import load_dotenv
+import os, re, json
+from langchain_groq import ChatGroq
+from langchain_core.messages import HumanMessage, SystemMessage
 
-def getAirportId(city_name):
-    url = "https://booking-com15.p.rapidapi.com/api/v1/flights/searchDestination"
-    querystring = {"query": city_name}
-    headers = {
-        "X-RapidAPI-Key": "f69f6cee7bmsh8c3c25da179ab4bp1a43f7jsne7d4d9a36b26",
-        "X-RapidAPI-Host": "booking-com15.p.rapidapi.com"
-    }
-    response = requests.get(url, headers=headers, params=querystring)
-    data = response.json()
-    
-    try:
-        airport_id = data.get('data',{})[0].get('id')
-        print(airport_id)
-        return airport_id
-    except (IndexError, KeyError):
-        print(f"❌ Could not find airport for city: {city_name}")
-        return None
-    
-
-def getFlightDetails(fromCity, toCity, departDate, adults, currency_code):
-    url = "https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights"
-    # fromId = getAirportId(fromCity)
-    # toId = getAirportId(toCity)
-    fromId = "DEL.AIRPORT"
-    toId = "BOM.AIRPORT"
-
-    if not fromId or not toId:
-        return []
+def getFlightDetails(fromId,toId,departDate,adults,currency_code):
+    url = url = "https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights"
 
     querystring = {
         "fromId": fromId,
