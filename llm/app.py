@@ -14,7 +14,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-sharedUser = User()
+class userDetails:
+     FlightDetails : str
+
+test_user = User(AgeGrp= 23, 
+                 SocialState= 'ambivert',
+                 TravellingAlone= 'yes',
+                 BudgetActivity= 8000,
+                 ActivityType= ["Adventure",
+                                "Nature & Wildlife",
+                                "Water Activities"],
+                 ActivityQuery= "I want to do something exciting")
 
 @app.post("/flights_details")
 async def get_flight_info():
@@ -25,8 +35,12 @@ async def get_hotel_info():
     return None
 
 @app.post("/activites_details")
-async def get_activities_info():
-    return None
+async def get_activities_info(req : userDetails):
+        print("received Info: ", req)
+        result = find_itenary(User)
+        return {"status" : "success", "llm_responce" : result}
+
+    
 
 @app.post("/itenary_details")
 async def get_itenary_info():
