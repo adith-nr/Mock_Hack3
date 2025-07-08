@@ -1,9 +1,48 @@
 {
-  "numberOfDays": 7,
-  "budgetClass": "economy",
-  "destination": "Paris",
-  "origin": "New York",
-  "layovers": ["London", "Frankfurt"],
-  "arrivalDate": "2025-07-15",
-  "departureDate": "2025-07-08"
+  "tickets": [
+    {
+      "airline": "Air France",
+      "flightNumber": "AF123",
+      "from": "New York",
+      "to": "Paris",
+      "departure": "2025-07-08T10:00",
+      "arrival": "2025-07-08T22:00",
+      "duration": "7h 30m",
+      "price": "$650",
+      "bookingUrl": "https://www.airfrance.com/booking/AF123"
+    },
+    {
+      "airline": "Lufthansa",
+      "flightNumber": "LH456",
+      "from": "Berlin",
+      "to": "Tokyo",
+      "departure": "2025-07-09T13:00",
+      "arrival": "2025-07-10T07:30",
+      "duration": "13h 30m",
+      "price": "$1200",
+      "bookingUrl": "https://www.lufthansa.com/booking/LH456"
+    },
+    {
+      "airline": "Emirates",
+      "flightNumber": "EK202",
+      "from": "Dubai",
+      "to": "Sydney",
+      "departure": "2025-07-11T21:00",
+      "arrival": "2025-07-12T18:00",
+      "duration": "14h 0m",
+      "price": "$1400",
+      "bookingUrl": "https://www.emirates.com/booking/EK202"
+    },
+    {
+      "airline": "Qatar Airways",
+      "flightNumber": "QR789",
+      "from": "Doha",
+      "to": "London",
+      "departure": "2025-07-13T08:00",
+      "arrival": "2025-07-13T14:00",
+      "duration": "7h 0m",
+      "price": "$900",
+      "bookingUrl": "https://www.qatarairways.com/booking/QR789"
+    }
+  ]
 }

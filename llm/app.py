@@ -5,6 +5,8 @@ from utils_A import *
 from utils_B import *
 from typing import TypedDict
 from pydantic import BaseModel
+from scrap import get_hotel_info as fetch_hotel_info
+
 
 app = FastAPI()
 
@@ -16,6 +18,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+class Hotel(BaseModel):
+    prompt: str
+    location: str
  
 flight: Flight = {
     "numberOfDays": 3,
@@ -44,8 +49,10 @@ async def get_flight_info(req : Flight):
     return {"status" : "success", "llm_responce" : result}
 
 @app.post("/hotels_details")
-async def get_hotel_info():
-    return None
+async def get_hotel_info(req : Hotel):
+    result = fetch_hotel_info(req.prompt, req.location)
+    print(result)
+    return {"status" : "success", "llm_responce" : result}
 
 @app.post("/activites_details")
 async def get_activities_info(req : Activity):
