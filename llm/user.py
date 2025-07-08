@@ -3,6 +3,9 @@ from typing import List, Literal,Dict
 
 class Flight(TypedDict):
     airline : str
+    from_city:str
+    to_city:str
+    departure_date : str
     departure : str
     arrival : str
     price : str
