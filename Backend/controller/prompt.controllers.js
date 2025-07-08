@@ -1,10 +1,9 @@
 import axios from "axios";
 
 export const Activity =  async (req , res) => {
-    //data = req.body
-    data = new FormData()
-    //data.append("age" : age)
-
+   
+    const{AgeGrp,SocialState,TravellingAlone,Budget}=req.body
+    const data = {AgeGrp,SocialState,TravellingAlone,Budget}
     try{
         const responce = await axios.post("http://localhost:8000/activites_details", 
             data, 
@@ -47,11 +46,11 @@ export const Flight = async (req , res) => {
 }
 
 export const Hotel = async (req , res) => {
-    const {city, check_in, check_out, budget} = req.body
-    const data = {city, check_in, check_out, budget}
+    const {prompt,location} = req.body
+    const data = {prompt,location}
 
     try{
-        const resp = await fetch("http://localhost:8000/hotel_details", {
+        const resp = await fetch("http://localhost:8000/hotels_details", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -59,8 +58,8 @@ export const Hotel = async (req , res) => {
             body: JSON.stringify(data)
         })
 
-        const data = await resp.json()
-        res.status(200).json({hotel_details: data})
+        const Hdata = await resp.json()
+        res.status(200).json({hotel_details: Hdata.llm_responce})
     } catch (err) {
         console.error('Forwarding error:', err.message);
         res.status(500).json({ error: 'Python service failed' });

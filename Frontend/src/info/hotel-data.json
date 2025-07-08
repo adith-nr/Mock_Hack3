@@ -1,0 +1,109 @@
+{
+  "hotels": [
+    {
+      "name": "Snow Valley Resorts",
+      "price": "₹2,868",
+      "rating": "4.5",
+      "stars": "4",
+      "location": "Kachi Ghatti"
+    },
+    {
+      "name": "8fold by LaRiSa",
+      "price": "₹3,251",
+      "rating": "4.2",
+      "stars": "4",
+      "location": "Kachi Ghatti"
+    },
+    {
+      "name": "Taj Theog Resort and Spa, Shimla",
+      "price": "₹14,500",
+      "rating": "4.5",
+      "stars": "5",
+      "location": "Theog"
+    },
+    {
+      "name": "Royale Retreat Hotel & Spa Near Mall Road",
+      "price": "₹3,485",
+      "rating": "4.2",
+      "stars": "4",
+      "location": "The Mall, Shilli"
+    },
+    {
+      "name": "Radisson Hotel Shimla",
+      "price": "₹15,000",
+      "rating": "4.1",
+      "stars": "5",
+      "location": "Longwood"
+    },
+    {
+      "name": "WelcomHeritage Elysium Resort & Spa",
+      "price": "₹10,813",
+      "rating": "4.9",
+      "stars": "5",
+      "location": "Tutikandi"
+    },
+    {
+      "name": "Hotel Kapil",
+      "price": "₹1,601",
+      "rating": "4.4",
+      "stars": "3",
+      "location": "Longwood"
+    },
+    {
+      "name": "Hotel Willow Banks - Boutique 4 star Hotel on the Mall Road Shimla",
+      "price": "₹6,412",
+      "rating": "4.0",
+      "stars": "4",
+      "location": "The Mall, The Mall"
+    },
+    {
+      "name": "Hotel Shingar The Mall Road",
+      "price": "₹2,296",
+      "rating": "3.7",
+      "stars": "3",
+      "location": "The Mall, The Mall"
+    },
+    {
+      "name": "The Zion Hotel",
+      "price": "₹3,142",
+      "rating": "4.4",
+      "stars": "4",
+      "location": "Kachi Ghatti"
+    },
+    {
+      "name": "Brightland Hotel Near Mall Road (Stags not allowed)",
+      "price": "₹3,534",
+      "rating": "4.1",
+      "stars": "3",
+      "location": "Cart Road, The Mall"
+    },
+    {
+      "name": "Hotel Silverine",
+      "price": "₹2,695",
+      "rating": "3.8",
+      "stars": "3",
+      "location": "The Mall, The Mall"
+    },
+    {
+      "name": "Honeymoon Inn Shimla",
+      "price": "₹4,400",
+      "rating": "4.5",
+      "stars": "3",
+      "location": "The Mall, The Mall"
+    },
+    {
+      "name": "Hotel Combermere",
+      "price": "₹6,480",
+      "rating": "3.8",
+      "stars": "4",
+      "location": "The Mall, The Mall"
+    },
+    {
+      "name": "Regenta Resort & Spa Mashobra",
+      "price": "₹4,499",
+      "rating": "5.0",
+      "stars": "4",
+      "location": "Shimla"
+    }
+  ]
+}
