@@ -1,5 +1,8 @@
 import React, { useRef } from 'react';
 import Flights from './sections/Flights';
+import Stays from './sections/Stays';
+import Activities from './sections/Activities';
+import Itenary from './sections/Itenary';
 
 function App() {
   const containerRef = useRef(null);
@@ -21,19 +24,10 @@ function App() {
       className="w-screen h-screen flex overflow-x-auto overflow-y-hidden scroll-smooth"
       style={{ scrollSnapType: 'x mandatory' }}
     >
+      <Itenary />
       <Flights />
-      <section
-        className="flex-shrink-0 w-screen h-screen flex items-center justify-center bg-green-100"
-        style={{ scrollSnapAlign: 'start' }}
-      >
-        <h1 className="text-4xl font-bold text-green-700">Stays</h1>
-      </section>
-      <section
-        className="flex-shrink-0 w-screen h-screen flex items-center justify-center bg-yellow-100"
-        style={{ scrollSnapAlign: 'start' }}
-      >
-        <h1 className="text-4xl font-bold text-yellow-700">Activities</h1>
-      </section>
+      <Activities />
+      <Stays />
     </div>
   );
 }

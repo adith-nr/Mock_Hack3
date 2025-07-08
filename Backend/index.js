@@ -10,7 +10,7 @@ app.use(cors({
     credentials:true
 }))
 app.use(express.json())
-app.use("api/prompt", promptRoute)
+app.use("/api/prompt", promptRoute)
 
 app.listen(PORT, () => {
     console.log("Server listening on PORT:", PORT)
