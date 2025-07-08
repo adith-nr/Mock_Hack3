@@ -1,6 +1,11 @@
 from typing_extensions import TypedDict
-from typing import List, Literal
+from typing import List, Literal, Optional
 class User(TypedDict):
+    #General State
+    AgeGrp : int
+    SocialState : Literal["intorvert", "extrovert" ,"ambivert"]
+    TravellingAlone : Literal["yes", "no"]
+
     #Flight State
 
 
@@ -8,8 +13,6 @@ class User(TypedDict):
 
 
     #Activites State
-    AgeGrp : int | 23
-    SocialState : Literal["intorvert", "extrovert" ,"ambivert"]
     BudgetActivity : int
-    ActivityType : List
-    PersonalPreference : str 
+    ActivityType : List[str]
+    ActivityQuery : str 

@@ -1,5 +1,8 @@
 from fastapi import FastAPI, requests
 from fastapi.middleware.cors import CORSMiddleware
+from user import *
+from utilsA import *
+from utilsB import *
 
 app = FastAPI()
 
@@ -10,6 +13,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+sharedUser = User()
 
 @app.post("/flights_details")
 async def get_flight_info():
