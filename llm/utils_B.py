@@ -55,4 +55,4 @@ test_user = User(ActivityDetails= Activity(AgeGrp= 23,
                                 "Water Activities"],
                  ActivityQuery= "I want to do something exciting"))
         
-find_itenary(test_user)
+#find_itenary(test_user)
