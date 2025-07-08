@@ -1,6 +1,5 @@
 "use client"
 import { CalendarDays, MapPin, Plane, Clock, Trash2, Plus, DollarSign, ChevronDown } from "lucide-react"
-
 const FlightInputs = ({
   form,
   layoverInput,
@@ -40,7 +39,7 @@ const FlightInputs = ({
             <div className="relative">
               <select
                 value={form.numberOfDays}
-                onChange={(e) => handleSelectChange("numberOfDays")(e.target.value)}
+                onChange={handleSelectChange("numberOfDays")}
                 className="w-full h-11 px-3 pr-10 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none"
               >
                 <option value="">Select days</option>
@@ -62,7 +61,7 @@ const FlightInputs = ({
             <div className="relative">
               <select
                 value={form.budgetClass}
-                onChange={(e) => handleSelectChange("budgetClass")(e.target.value)}
+                onChange={handleSelectChange("budgetClass")}
                 className="w-full h-11 px-3 pr-10 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none"
               >
                 <option value="">Select class</option>
@@ -115,8 +114,7 @@ const FlightInputs = ({
               Departure Date
             </label>
             <input
-              type="text"
-              placeholder="yyyy-mm-dd"
+              type="date"
               value={form.departureDate}
               onChange={(e) => setForm({ ...form, departureDate: formatDate(e.target.value) })}
               maxLength={10}
@@ -130,8 +128,7 @@ const FlightInputs = ({
               Return Date
             </label>
             <input
-              type="text"
-              placeholder="yyyy-mm-dd"
+              type="date"
               value={form.arrivalDate}
               onChange={(e) => setForm({ ...form, arrivalDate: formatDate(e.target.value) })}
               maxLength={10}

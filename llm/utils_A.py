@@ -158,7 +158,7 @@ def final_json():
     df = pd.read_json('data.json')
     df = df.T
     df['duration_min'] = df['duration'].apply(duration_to_minutes)
-    df_sorted = df.sort_values(by=['from_airport', 'price', 'duration_min'], ascending=[True, True, True])
+    df_sorted = df.sort_values(by=['price', 'duration_min'], ascending=[True, True])
     top_flights = df_sorted.groupby('from_airport').head(4).reset_index(drop=True)
     top_flights = top_flights.drop(columns=['duration_min'])
     df = top_flights.T
@@ -183,7 +183,7 @@ def find_flights(state: User) -> User:
     result = {}
     result = get_all_data(flights)
     with open('data.json', 'w') as f:
-        f.write(result)
+        json.dump(result, f)
         
     final_json()
     
@@ -193,48 +193,6 @@ def find_flights(state: User) -> User:
     print(data)
     return data
 
-
-
-def find_hotel(state: User):
-    hotel_state = state['HotelDetails']
-    
-    SystemMode = (
-        "You are a smart hotel search assistant that searches the internet in real-time "
-        "and provides hotel listings based on user's preferences and location."
-    )
-    
-    prompt = f"""
-🏨 TASK  
-Find the best available **hotel options** in {hotel_state['location']}   based on the following preferences:
-
-• Budget: ₹{hotel_state['budgetHotel']} per night  
-• Rating: {hotel_state['rating']}  
-• Housing Type: {hotel_state['housingtype']}
-
-
-
-📄 RESPONSE FORMAT — JSON only, no markdown:
-
-{{
-  "<Hotel1>": ["<price_per_night>", "<rating>", "<area_name>", "<booking_link>"],
-  "<Hotel2>": [...],
-  ...
-}}
-
-Return exactly this JSON object and nothing else.
-"""
-
-    # Send to your LLM
-    llm_responce = llm.invoke([SystemMessage(SystemMode), HumanMessage(prompt)])
-
-    # Extract JSON using regex
-    pattern = r"\{[^{}]*\}"
-    match = re.search(pattern, str(llm_responce.content), re.DOTALL)
-    
-    data = json.loads(match.group()) if match else {}
-
-    print(data)
-    return data
 
 demo_hotel: Hotel = {
     "numberOfDaysStay": 3,
@@ -249,7 +207,7 @@ demo_flight: Flight = {
     "budgetFlight": "Economy",
     "destination": "Hyderabad",
     "origin": "Mumbai",
-    "layovers": [["Delhi", "2025-08-18"]],
+    "layovers": [['Chennai', "2025-08-19"]],
     "arrivalDate": "2025-08-21",
     "departureDate": "2025-08-15"
 }
@@ -271,4 +229,4 @@ test_user = User(FlightDetails= demo_flight,
     HotelDetails  = demo_hotel,
     ActivityDetails = demo_activity)
         
-#find_flights(test_user)
+tryt = find_flights(test_user)

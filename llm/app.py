@@ -60,7 +60,6 @@ async def get_activities_info(req : Activity):
         result = find_itenary(User(ActivityDetails=req))
         return {"status" : "success", "llm_responce" : result}
 
-    
 
 @app.post("/itenary_details")
 async def get_itenary_info():
