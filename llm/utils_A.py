@@ -78,7 +78,7 @@ def getFlightDetails(fromCity, toCity, departDate, adults, currency_code):
             "airline": airline_name,
             "from_city": fromCity,
             "to_city": toCity,
-            "departure_date":departDate
+            "departure_date":departDate,
             "departure": departure_time,
             "arrival": arrival_time,
             "price": price,
@@ -91,17 +91,24 @@ def getFlightDetails(fromCity, toCity, departDate, adults, currency_code):
             break
     
     flight_list.sort(key=lambda x: x["price"])
-
+    final_flight_list=[]
     
     for i, flight in enumerate(flight_list[:5]):
-        print(f"\n✈️  Airline:   {flight['airline']} ({i+1})")
-        print(f"🛫 Departure: {flight['departure']}")
-        print(f"🛬 Arrival:   {flight['arrival']}")
-        print(f"💰 Price:     {flight['currency']} {flight['price']:.2f}")
-        print(f"🕒 Duration:  {flight['duration_str']}")
+       flight_obj = {
+        "id": i + 1,  # unique ID for selection
+        "airline": flight["airline"],
+        "departure": flight["departure"],
+        "arrival": flight["arrival"],
+        "price": round(flight["price"], 2),
+        "currency": flight["currency"],
+        "duration": flight["duration_str"],
+        "from": flight["from_city"],
+        "to": flight["to_city"]
+       }
+       final_flight_list.append(flight_obj)
 
-    return flight_list
+    return final_flight_list
 
 
-getFlightDetails("Delhi","Mumbai","2025-07-15","1","INR")
+print(getFlightDetails("Delhi","Mumbai","2025-07-15","1","INR"))
 #getAirportId("Mumbai")

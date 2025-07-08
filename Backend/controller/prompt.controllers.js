@@ -21,3 +21,48 @@ const Activity =  async (req , res) => {
 }
 
 export default Activity
+
+export const Flight = async (req , res) => {
+    const {from_city, to_city, departure_date,budget} = req.body
+    const data = {from_city, to_city, departure_date,budget}
+
+    try{
+        const resp = await fetch("http://localhost:8000/flight_details", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+
+        const data = await resp.json()
+        res.status(200).json({flight_details: data})
+
+    } catch (err) {
+        console.error('Forwarding error:', err.message);
+        res.status(500).json({ error: 'Python service failed' });
+    }
+   
+}
+
+export const Hotel = async (req , res) => {
+    const {city, check_in, check_out, budget} = req.body
+    const data = {city, check_in, check_out, budget}
+
+    try{
+        const resp = await fetch("http://localhost:8000/hotel_details", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+
+        const data = await resp.json()
+        res.status(200).json({hotel_details: data})
+    } catch (err) {
+        console.error('Forwarding error:', err.message);
+        res.status(500).json({ error: 'Python service failed' });
+    }
+}
+
