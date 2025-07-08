@@ -1,10 +1,6 @@
 import requests
-
-
-
-
 def getFlightDetails(fromId,toId,departDate,adults,currency_code):
-    url = url = "https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights"
+    url = "https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights"
 
     querystring = {
         "fromId": fromId,

@@ -1,8 +1,8 @@
 from fastapi import FastAPI, requests
 from fastapi.middleware.cors import CORSMiddleware
 from user import *
-from utilsA import *
-from utilsB import *
+from utils_A import *
+from utils_B import *
 
 app = FastAPI()
 
