@@ -19,6 +19,7 @@ llm = ChatGroq(model=MODEL, temperature=0 , api_key= os.environ.get("GROQ_API_KE
 def find_itenary(state: User) -> User:
 
     state = state['ActivityDetails']
+
     
     SystemSetup = "You are the world's best Itenary Planner Assistant"
     prompt = f"""
@@ -45,13 +46,13 @@ def find_itenary(state: User) -> User:
 
     return None
 
-test_user = User(AgeGrp= 23, 
+test_user = User(ActivityDetails= Activity(AgeGrp= 23, 
                  SocialState= 'ambivert',
                  TravellingAlone= 'yes',
                  BudgetActivity= 8000,
                  ActivityType= ["Adventure",
                                 "Nature & Wildlife",
                                 "Water Activities"],
-                 ActivityQuery= "I want to do something exciting")
-
+                 ActivityQuery= "I want to do something exciting"))
+        
 find_itenary(test_user)

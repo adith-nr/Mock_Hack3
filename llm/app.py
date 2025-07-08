@@ -16,9 +16,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-     
-
-test_user = User(ActivityDetails= Activity(AgeGrp= 23, 
+ 
+flight: Flight = {
+    "numberOfDays": 3,
+    "budgetFlight": "Economy",
+    "destination": "Hyderabad",
+    "origin": "Mumbai",
+    "layovers": [["Delhi", "2025-08-18"]],
+    "arrivalDate": "2025-08-21",
+    "departureDate": "2025-08-15"
+}
+test_user = User(FlightDetails= flight,
+    ActivityDetails= Activity(AgeGrp= 23, 
                  SocialState= 'ambivert',
                  TravellingAlone= 'yes',
                  BudgetActivity= 8000,
@@ -26,20 +35,22 @@ test_user = User(ActivityDetails= Activity(AgeGrp= 23,
                                 "Nature & Wildlife",
                                 "Water Activities"],
                  ActivityQuery= "I want to do something exciting"))
-            
+           
 
 @app.post("/flights_details")
-async def get_flight_info():
-    return None
+async def get_flight_info(req : Flight):
+    test_user['FlightDetails'] = req
+    result = find_flights(test_user)
+    return {"status" : "success", "llm_responce" : result}
 
 @app.post("/hotels_details")
 async def get_hotel_info():
     return None
 
 @app.post("/activites_details")
-async def get_activities_info(req : User):
+async def get_activities_info(req : Activity):
         print("received Info: ", req)
-        result = find_itenary(User)
+        result = find_itenary(User(ActivityDetails=req))
         return {"status" : "success", "llm_responce" : result}
 
     
