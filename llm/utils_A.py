@@ -1,16 +1,13 @@
 from user import *
 import google.generativeai as genai
 from dotenv import load_dotenv
-import os, re, json
-import pandas as pd
-
-from consts import *
+import os, re, json, time
 from langchain_groq import ChatGroq
 from langchain_core.messages import HumanMessage, SystemMessage
-import time
+import pandas as pd
+from consts import *
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
-
 
 load_dotenv()
 
@@ -167,6 +164,7 @@ def final_json():
     
 
 def find_flights(state: User) -> User:
+
     state = state['FlightDetails']
     origin_k = state["origin"]
     dest_k = state['destination']
@@ -212,21 +210,14 @@ demo_flight: Flight = {
     "departureDate": "2025-08-15"
 }
 
-
-
-demo_activity : Activity = {
-                 "AgeGrp" : 23, 
-                 "SocialState": 'ambivert',
-                 "TravellingAlone": 'yes',
-                 "BudgetActivity": 8000,
-                 "ActivityType": ["Adventure",
+test_user = User(FlightDetails= demo_flight,
+    ActivityDetails= Activity(AgeGrp= 23, 
+                 SocialState= 'ambivert',
+                 TravellingAlone= 'yes',
+                 BudgetActivity= 8000,
+                 ActivityType= ["Adventure",
                                 "Nature & Wildlife",
                                 "Water Activities"],
-                 "ActivityQuery": "I want to do something exciting"
-}
-
-test_user = User(FlightDetails= demo_flight,
-    HotelDetails  = demo_hotel,
-    ActivityDetails = demo_activity)
+                 ActivityQuery= "I want to do something exciting"))
         
 tryt = find_flights(test_user)
