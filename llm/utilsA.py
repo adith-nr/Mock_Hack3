@@ -16,4 +16,3 @@ headers = {
     "X-RapidAPI-Host": "booking-com15.p.rapidapi.com"
 }
 response = requests.get
-data = 
