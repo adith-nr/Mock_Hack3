@@ -18,6 +18,8 @@ llm = ChatGroq(model=MODEL, temperature=0 , api_key= os.environ.get("GROQ_API_KE
 
 def find_itenary(state: User) -> User:
 
+    state = state['ActivityDetails']
+    
     SystemSetup = "You are the world's best Itenary Planner Assistant"
     prompt = f"""
     Generate a list of Activities that the user can do based on user age: {state['AgeGrp']},
