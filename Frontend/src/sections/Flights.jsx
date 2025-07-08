@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import FlightToBackend from '../components/FlightToBackend';
 
 const formatDate = (value) => {
   const digits = value.replace(/\D/g, '');
@@ -24,17 +25,15 @@ const initialData = {
 };
 
 const Flights = () => {
-  const [form, setForm] = useState(initialData);
-  const [layoverInput, setLayoverInput] = useState('');
+  const [form, setForm] = useState(() => {
+    const saved = localStorage.getItem('flightForm');
+    return saved ? JSON.parse(saved) : initialData;
+  });
+  // Layover input as an object for destination, arrival, departure
+  const [layoverInput, setLayoverInput] = useState({ destination: '', arrival: '', departure: '' });
 
   useEffect(() => {
-    // fetch('/api/flight-data', {
-    //   method: 'PUT',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(form)
-    // });
-    // For demo, just log to console
-    console.log('Updated flight data:', form);
+    localStorage.setItem('flightForm', JSON.stringify(form));
   }, [form]);
 
   const handleChange = (field) => (e) => {
@@ -45,22 +44,53 @@ const Flights = () => {
     setForm({ ...form, [field]: e.target.value });
   };
 
+  // Handle layover input changes
+  const handleLayoverInputChange = (field) => (e) => {
+    setLayoverInput({ ...layoverInput, [field]: e.target.value });
+  };
+
+  // Add layover as an object with destination, arrival, departure
   const addLayover = (e) => {
     e.preventDefault();
-    if (layoverInput.trim() !== '') {
-      setForm({ ...form, layovers: [...form.layovers, layoverInput.trim()] });
-      setLayoverInput('');
+    if (
+      layoverInput.destination.trim() &&
+      layoverInput.arrival.trim() &&
+      layoverInput.departure.trim()
+    ) {
+      setForm({
+        ...form,
+        layovers: [...form.layovers, { ...layoverInput }]
+      });
+      setLayoverInput({ destination: '', arrival: '', departure: '' });
     }
   };
 
   const removeLayover = (index) => {
-    setForm({ ...form, layovers: form.layovers.filter((_, i) => i !== index) });
+    setForm({
+      ...form,
+      layovers: form.layovers.filter((_, i) => i !== index)
+    });
+  };
+
+  const isFormComplete =
+    form.numberOfDays &&
+    form.budgetClass &&
+    form.destination &&
+    form.origin &&
+    form.arrivalDate.length === 10 &&
+    form.departureDate.length === 10;
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (isFormComplete) {
+      console.log('Search data:', form);
+    }
   };
 
   return (
     <section
-      className="flex-shrink-0 w-screen h-screen flex flex-col items-center justify-center bg-blue-100"
-      style={{ scrollSnapAlign: 'start' }}
+      className="flex-shrink-0 h-screen flex flex-col items-center justify-center bg-blue-100"
+      style={{ width: '110vw', scrollSnapAlign: 'start', overflowY: 'auto' }}
     >
       <h1 className="text-4xl font-bold text-blue-700 mb-8">Flights</h1>
       <form className="w-full max-w-md bg-white rounded-lg shadow p-6 flex flex-col gap-4">
@@ -116,35 +146,52 @@ const Flights = () => {
           <div className="flex gap-2 mb-2">
             <input
               type="text"
-              className="border rounded px-3 py-2 flex-1"
-              placeholder="Add layover destination"
-              value={layoverInput}
-              onChange={e => setLayoverInput(e.target.value)}
+              className="border rounded px-2 py-2 flex-1"
+              placeholder="Destination"
+              value={layoverInput.destination}
+              onChange={handleLayoverInputChange('destination')}
             />
+            {layoverInput.destination.trim() !== '' && (
+              <input
+                type="text"
+                className="border rounded px-2 py-2 w-24"
+                placeholder="Departure"
+                value={layoverInput.departure}
+                onChange={handleLayoverInputChange('departure')}
+              />
+            )}
             <button
               type="button"
               className="bg-blue-600 text-white px-3 py-2 rounded"
               onClick={addLayover}
+              disabled={
+                !layoverInput.destination.trim() ||
+                !layoverInput.departure.trim()
+              }
             >
               Add
             </button>
           </div>
           <div className="flex flex-col gap-2">
             {form.layovers.map((layover, idx) => (
-              <div
-                key={idx}
-                className="relative group"
-              >
+              <div key={idx} className="relative group flex gap-2 items-center">
                 <input
                   type="text"
-                  className="border rounded px-3 py-2 bg-gray-50 w-full pr-16"
-                  value={layover}
+                  className="border rounded px-3 py-2 bg-gray-50 w-32"
+                  value={layover.destination}
+                  readOnly
+                  style={{ cursor: 'default' }}
+                />
+                <input
+                  type="text"
+                  className="border rounded px-3 py-2 bg-gray-50 w-24"
+                  value={layover.departure}
                   readOnly
                   style={{ cursor: 'default' }}
                 />
                 <button
                   type="button"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
                   onClick={() => removeLayover(idx)}
                   tabIndex={-1}
                   title="Remove"
@@ -177,7 +224,20 @@ const Flights = () => {
             maxLength={10}
           />
         </div>
+        <button
+          type="submit"
+          className={`mt-4 w-full py-2 rounded text-white font-semibold transition ${
+            isFormComplete ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-300 cursor-not-allowed'
+          }`}
+          disabled={!isFormComplete}
+          onClick={handleSearch}
+        >
+          Search
+        </button>
       </form>
+
+      <FlightToBackend localStorageKey="flightForm" endpoint="http://localhost:5000/api/flight-data" />
+    
     </section>
   );
 };
