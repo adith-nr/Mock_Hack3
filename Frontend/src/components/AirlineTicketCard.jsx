@@ -22,12 +22,12 @@ const AirlineTicketCard = ({ ticket }) => (
     >
       <div className="flex justify-between items-center mb-2">
         <span className="font-bold text-blue-700 text-lg">{ticket.airline}</span>
-        <span className="text-xs text-gray-500">{ticket.flightNumber}</span>
+        <span className="text-xs text-gray-500">{ticket.flight_code}</span>
       </div>
       <div className="flex justify-between items-center mb-2">
-        <span className="text-xl">{ticket.from}</span>
+        <span className="text-xl">{ticket.from_airport}</span>
         <span className="text-gray-400">→</span>
-        <span className="text-xl">{ticket.to}</span>
+        <span className="text-xl">{ticket.to_airport}</span>
       </div>
       <div className="flex justify-between text-sm mb-1">
         <span>
@@ -63,12 +63,12 @@ const AirlineTicketCard = ({ ticket }) => (
     >
       <span className="font-semibold text-blue-700">Book now: </span>
       <a
-        href={ticket.bookingUrl}
+        href={ticket.link}
         target="_blank"
         rel="noopener noreferrer"
         className="text-blue-600 underline hover:text-blue-800"
       >
-        {ticket.bookingUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+        {ticket.link.replace(/^https?:\/\//, '').replace(/\/$/, '')}
       </a>
     </div>
   </div>

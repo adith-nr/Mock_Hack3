@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import FlightToBackend from '../components/FlightToBackend';
 import AirlineTicketCard from '../components/AirlineTicketCard';
 import FlightInputs from '../components/FlightInputs'; // Import the form component
 import flightData from '../info/flight-data.json';
+import { sendFlightData } from '../components/sendFlightData';
+
+
 
 const formatDate = (value) => {
   const digits = value.replace(/\D/g, '');
@@ -27,13 +29,21 @@ const initialData = {
   departureDate: ''
 };
 
+
+
 const Flights = () => {
+
   const [form, setForm] = useState(() => {
     const saved = localStorage.getItem('flightForm');
     return saved ? JSON.parse(saved) : initialData;
   });
   const [layoverInput, setLayoverInput] = useState({ destination: '', arrival: '', departure: '' });
   const [showTickets, setShowTickets] = useState(false);
+  const [tickets, setTickets] = useState([]);
+
+  useEffect(() => {
+    setTickets(tickets)
+  }, [tickets]);
 
   useEffect(() => {
     localStorage.setItem('flightForm', JSON.stringify(form));
@@ -70,15 +80,26 @@ const Flights = () => {
     form.origin &&
     form.arrivalDate.length === 10 &&
     form.departureDate.length === 10;
-  const handleSearch = (e) => {
+  const handleSearch = async (e) =>{
     e.preventDefault();
     if (isFormComplete) {
-      setShowTickets(true);
-      console.log('Search data:', form);
+      const responce = await sendFlightData(form);
+      if (responce) {
+        
+        console.log('Flight data sent:', responce.flight_details);
+        setTickets(Object.values(responce.flight_details)); 
+        console.log(tickets)
+        setShowTickets(true);
+
+      } else {
+        console.error('Failed to send search data');
+      }
+      // setShowTickets(true);
+      // console.log('Search data:', form);
     }
   };
 
-  const tickets = flightData.tickets || [];
+  
 
   return (
     <section
@@ -129,7 +150,6 @@ const Flights = () => {
           </div>
         )}
       </div>
-      <FlightToBackend localStorageKey="flightForm" endpoint="http://localhost:3000/api/prompt/Flight" />
     </section>
   );
 };

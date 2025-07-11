@@ -5,8 +5,13 @@ import os, re, json, time
 from langchain_groq import ChatGroq
 from langchain_core.messages import HumanMessage, SystemMessage
 import pandas as pd
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from consts import *
+import asyncio
 from playwright.sync_api import sync_playwright
+from playwright.async_api import async_playwright
+
 from bs4 import BeautifulSoup
 
 load_dotenv()
@@ -41,104 +46,64 @@ def generate_round_trip(req_flights):
 def get_all_data(flights):
     result = {}
     j = 0
-    for (org,dest,dt) in flights:
-        html = ""
-        with sync_playwright() as p:
-            url = f"https://www.tripozo.com/flight/results?adult=1&child=0&class=1&destination={airports[dest.title()]}&fareType=Regular&from={dt}&infant=0&origin={airports[org.title()]}&tripType=oneWay"
 
-            browser = p.chromium.launch(headless=True) 
-            context = browser.new_context()
-            page = context.new_page()
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-gpu")
+    driver = webdriver.Chrome(options=chrome_options)
 
+    for org, dest, dt in flights:
+        try:
+            url = (
+                f"https://www.tripozo.com/flight/results?adult=1&child=0&class=1&destination={airports[dest.title()]}&fareType=Regular&from={dt}&infant=0&origin={airports[org.title()]}&tripType=oneWay"
+            )
 
-            page.goto(url)
-            # for _ in range(3):
-            #     page.mouse.wheel(0, 1000)
-            #     time.sleep(1.5)
+            driver.get(url)
+            time.sleep(5)  # Allow page to load
 
-            time.sleep(5)
+            soup = BeautifulSoup(driver.page_source, 'html.parser')
 
-            html = page.content()
-            # # Save the HTML
-            # with open("url.html", "w", encoding="utf-8") as f:
-            #     f.write(page.content())
+            prices = soup.find_all("div", class_="flight-price-number")
+            airlines = soup.find_all("div", class_="airline-name")
+            fromCities = soup.find_all("div", class_="from-airport")
+            durations = soup.find_all("div", class_="f-hvcenter fl-duration")
+            toCities = soup.find_all("div", class_="to-airport")
+            flightCode = soup.find_all("div", class_ ="airline-code")
 
-            browser.close()
+            for i in range(len(prices)):
+                try:
+                    price_match = re.search(r"₹([\d,]+)", str(prices[i]))
+                    price = int(price_match.group(1).replace(",", "")) if price_match else 0
+                    code = "".join(flightCode[i])
 
-        soup = ''
-        # with open("url.html", "r", encoding='utf-8') as f:
-        #     #print(f.read())
-        soup = BeautifulSoup(html, 'html.parser')
-        
-        price = soup.find_all("div", class_ = "flight-price-number")
-        airline = soup.find_all("div", class_ = "airline-name")
-        fromCity = soup.find_all("div", class_ = "from-airport")
-        duration = soup.find_all("div", class_ = "f-hvcenter fl-duration")
-        toCity = soup.find_all("div", class_ = "to-airport")
+                    flight_data = {
+                        "date": dt,
+                        "departure_time": fromCities[i].find("div", class_="time").get_text(strip=True),
+                        "departure": fromCities[i].find("div", class_="name").get_text(strip=True),
+                        "from_airport": fromCities[i].find("div", class_="code").get_text(strip=True),
+                        "price": price,
+                        "airline": airlines[i].get_text(strip=True),
+                        "duration": durations[i].get_text(strip=True),
+                        "to_airport": toCities[i].find("div", class_="code").get_text(strip=True),
+                        "arrival_time": toCities[i].find("div", class_="time").get_text(strip=True),
+                        "arrival": toCities[i].find("div", class_="name").get_text(strip=True),
+                        "link": url,
+                        "flight_code" : code[1:-1]
+                    }
 
-        
+                    result[j] = flight_data
+                    j += 1
 
-        for i in range(len(price)):
-            temp = {}
-            plane = airline[i].get_text(strip=True) 
+                except Exception as e:
+                    print(f"Error parsing flight {i}: {e}")
+                    continue
 
-            from_airport = fromCity[i]
-            codes = from_airport.find_all("div", class_="code")
-            airport_code = codes[0].get_text(strip=True)
+        except Exception as e:
+            print(f"❌ Failed for route {org} to {dest} on {dt}: {e}")
+            continue
 
-            # Extract time and city
-            depart_time = from_airport.find("div", class_="time").get_text(strip=True)
-            city = from_airport.find("div", class_="name").get_text(strip=True)
-
-            match = re.search(r"₹([\d,]+)", str(price[i]))
-            p = 0
-            if match:
-                p = int(match.group(1).replace(",", ""))
-                
-            flighttime = duration[i].get_text(strip=True)
-
-            to_airport = toCity[i]
-            codes = to_airport.find_all("div", class_="code")
-            a_airport_code = codes[0].get_text(strip=True)
-
-            # Extract time and city
-            a_time = to_airport.find("div", class_="time").get_text(strip=True)
-            a_city = to_airport.find("div", class_="name").get_text(strip=True)
-
-            temp = {
-                "date" : dt,
-                "departure_time" : depart_time,
-                "departure" : city,
-                "from_airport" : airport_code,
-                "price" : p,
-                "airline" : plane,
-                "duration" : flighttime,
-                "to_airport" : a_airport_code,
-                "arrival_time" : a_time,
-                "arrival" : a_city,
-                "arrival_time" : a_time,
-                "link" : url
-            }
-
-            filename = 'data2.json'
-            # Load existing list
-            with open(filename, "r") as f:
-                data = json.load(f)
-
-            # Append new record
-            data.append(temp)
-
-            # Save updated list
-            with open(filename, "w") as f:
-                json.dump(data, f, indent=2)
-                
-            result[j] = temp
-            j += 1
-
-    with open("data3.json", "a+") as f:
-        json.dump(result, f)
-
-    print(j)       
+    driver.quit()
+    print(f"✅ Total flights scraped: {j}")
     return result
 
 def duration_to_minutes(duration_str):
@@ -152,16 +117,17 @@ def duration_to_minutes(duration_str):
     return h * 60 + m
 
 def final_json():
-    df = pd.read_json('data.json')
-    df = df.T
-    df['duration_min'] = df['duration'].apply(duration_to_minutes)
-    df_sorted = df.sort_values(by=['price', 'duration_min'], ascending=[True, True])
-    top_flights = df_sorted.groupby('from_airport').head(4).reset_index(drop=True)
-    top_flights = top_flights.drop(columns=['duration_min'])
-    df = top_flights.T
-
-    df.to_json('okay.json')
-    
+    try:
+        df = pd.read_json('data.json')
+        df = df.T
+        df['duration_min'] = df['duration'].apply(duration_to_minutes)
+        df_sorted = df.sort_values(by=['price', 'duration_min'], ascending=[True, True])
+        top_flights = df_sorted.groupby('from_airport').head(4).reset_index(drop=True)
+        top_flights = top_flights.drop(columns=['duration_min'])
+        df = top_flights.T
+        df.to_json('okay.json')
+    except Exception as e:
+        print("Error:", e)
 
 def find_flights(state: User) -> User:
 
@@ -192,32 +158,32 @@ def find_flights(state: User) -> User:
     return data
 
 
-demo_hotel: Hotel = {
-    "numberOfDaysStay": 3,
-    "budgetHotel": 4000,
-    "location": "Dehradun",
-    "rating": "4-star",
-    "housingtype": "Resort"
-}
+# demo_hotel: Hotel = {
+#     "numberOfDaysStay": 3,
+#     "budgetHotel": 4000,
+#     "location": "Dehradun",
+#     "rating": "4-star",
+#     "housingtype": "Resort"
+# }
 
-demo_flight: Flight = {
-    "numberOfDays": 3,
-    "budgetFlight": "Economy",
-    "destination": "Hyderabad",
-    "origin": "Mumbai",
-    "layovers": [['Chennai', "2025-08-19"]],
-    "arrivalDate": "2025-08-21",
-    "departureDate": "2025-08-15"
-}
+# demo_flight: Flight = {
+#     "numberOfDays": 3,
+#     "budgetFlight": "Economy",
+#     "destination": "Hyderabad",
+#     "origin": "Mumbai",
+#     "layovers": [['Chennai', "2025-08-19"]],
+#     "arrivalDate": "2025-08-21",
+#     "departureDate": "2025-08-15"
+# }
 
-test_user = User(FlightDetails= demo_flight,
-    ActivityDetails= Activity(AgeGrp= 23, 
-                 SocialState= 'ambivert',
-                 TravellingAlone= 'yes',
-                 BudgetActivity= 8000,
-                 ActivityType= ["Adventure",
-                                "Nature & Wildlife",
-                                "Water Activities"],
-                 ActivityQuery= "I want to do something exciting"))
+# test_user = User(FlightDetails= demo_flight,
+#     ActivityDetails= Activity(AgeGrp= 23, 
+#                  SocialState= 'ambivert',
+#                  TravellingAlone= 'yes',
+#                  BudgetActivity= 8000,
+#                  ActivityType= ["Adventure",
+#                                 "Nature & Wildlife",
+#                                 "Water Activities"],
+#                  ActivityQuery= "I want to do something exciting"))
         
-tryt = find_flights(test_user)
+#tryt = find_flights(test_user)
