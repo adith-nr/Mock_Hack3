@@ -44,7 +44,7 @@ def find_itenary(state: User) -> User:
     data = json.loads(match.group())
     print(data)
 
-    return None
+    return data
 
 test_user = User(ActivityDetails= Activity(AgeGrp= 23, 
                  SocialState= 'ambivert',

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, requests
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from user import *
 from utils_A import *
@@ -43,8 +43,10 @@ test_user = User(FlightDetails= flight,
            
 
 @app.post("/flights_details")
-async def get_flight_info(req : Flight):
-    test_user['FlightDetails'] = req
+async def get_flight_info(req: Request):
+    req_json = await req.json()
+    print(req_json)
+    test_user['FlightDetails'] = req_json
     result = find_flights(test_user)
     return {"status" : "success", "llm_responce" : result}
 
@@ -60,7 +62,6 @@ async def get_activities_info(req : Activity):
         result = find_itenary(User(ActivityDetails=req))
         return {"status" : "success", "llm_responce" : result}
 
-    
 
 @app.post("/itenary_details")
 async def get_itenary_info():

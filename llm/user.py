@@ -2,7 +2,7 @@ from typing_extensions import TypedDict
 from typing import List, Literal,Dict
 
 class Flight(TypedDict):
-    numberOfDays: int
+    numberOfDays: str
     budgetFlight: str
     destination: str
     origin: str

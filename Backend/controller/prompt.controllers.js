@@ -22,12 +22,12 @@ export const Activity =  async (req , res) => {
 
 
 export const Flight = async (req , res) => {
-    console.log(req.body)
-   const {numberOfDays, budgetClass, destination, origin, layovers, arrivalDate, departureDate} = req.body
+    const {numberOfDays, budgetClass, destination, origin, layovers, arrivalDate, departureDate} = req.body
     const data = {numberOfDays, budgetClass, destination, origin, layovers, arrivalDate, departureDate}
 
+    console.log(data)
     try{
-        const resp = await fetch("http://localhost:8000/flight_details", {
+        const resp = await fetch("http://localhost:8000/flights_details", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -36,7 +36,8 @@ export const Flight = async (req , res) => {
         })
 
         const Fdata = await resp.json()
-        res.status(200).json({flight_details: Fdata})
+        console.log(Fdata.llm_responce)
+        res.status(200).json({"message" : "Success", flight_details: Fdata.llm_responce})
 
     } catch (err) {
         console.error('Forwarding error:', err.message);
